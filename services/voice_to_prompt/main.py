@@ -2,6 +2,9 @@ import os, json, wave, tempfile, time, uuid, asyncio, logging
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from faster_whisper import WhisperModel
 
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger("v2p")
+
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP", "localhost:9092").split(",")
 IN_TOPIC  = os.getenv("VOICE_TOPIC_IN",  "inbox")
