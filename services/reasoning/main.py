@@ -16,6 +16,7 @@ from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.tools import StructuredTool
+import httpx
 
 # ── Logging ────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -137,9 +138,32 @@ async def reason_loop():
 
             log.info(f"Transcript received: {text!r}")
 
-            # Build messages and invoke LLM
+            try:
+                resp = await httpx.get(
+                    f"http://localhost:8001/v1/users/{user_id}/profile",
+                    timeout=2.0
+                )
+                profile = resp.json()
+            except Exception:
+                profile = {}
+
+            few_shots = []
+            try:
+                sem_req = {"query": text, "top_k": 2}
+                resp2 = await httpx.post(
+                    f"http://localhost:8002/v1/users/{user_id}/retrieve",
+                    json=sem_req,
+                    timeout=3.0
+                )
+                few_shots = resp2.json()
+            except Exception:
+                few_shots = []
+            context_snippet = (
+                f"User Profile: {profile}\n"
+                f"Similar Past Interactions: {few_shots}\n\n"
+            )
             messages = [
-                SystemMessage(content=SYSTEM_PROMPT),
+                SystemMessage(content=context_snippet + SYSTEM_PROMPT),
                 HumanMessage(content=text)
             ]
             response = llm.invoke(messages, tools=TOOLS)
