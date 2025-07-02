@@ -74,4 +74,5 @@ async def retrieve(user_id: str, body: RetrieveRequest):
             timestamp=meta.get("timestamp", 0),
             score=match.score
         ))
+    print(f"Retrieved {interactions}")
     return interactions

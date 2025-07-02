@@ -25,6 +25,7 @@ async def startup_event():
 async def get_profile(user_id: str):
     key = f"user:{user_id}"
     data = await r.json().get(key)
+    log.info(f"Fetching profile for user_id={data}")
     if data is None:
         raise HTTPException(status_code=404, detail="User profile not found")
     return data
@@ -34,6 +35,7 @@ async def get_favorites(user_id: str):
     key = f"user:{user_id}"
     data = await r.json().get(key)
     favorites = data['favorites'] if data else None
+    log.info(f"Fetching favorites for user_id={user_id}: {favorites}")
     if favorites is None:
         raise HTTPException(status_code=404, detail="User favorites not found")
     return favorites

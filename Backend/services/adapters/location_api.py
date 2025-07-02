@@ -47,7 +47,6 @@ async def get_current_location(req: LocationRequest, user_id: str | None = None)
 
 @router.get("/nearby/{place_type}", response_model=list[Place])
 async def get_nearby(place_type: str, latitude: float, longitude: float, radius_km: float = 5.0):
-    # TODO: integrate real Places API
     sample = []
     for i in range(5):
         lat = latitude + random.uniform(-0.01, 0.01)
