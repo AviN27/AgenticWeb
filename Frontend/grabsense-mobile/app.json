@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "grabsense-mobile",
+    "slug": "grabsense-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "jsEngine": "hermes",
+    "userInterfaceStyle": "automatic",
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": ["expo-router"]
+  }
+}
