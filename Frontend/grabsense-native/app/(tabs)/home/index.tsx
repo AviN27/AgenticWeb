@@ -79,3 +79,4 @@ const styles = StyleSheet.create({
   recTitle: {
     marginBottom: 8,
   },
+});
