@@ -1,82 +1,178 @@
+import React from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Text,
+  Platform,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { FlatList, Pressable, StyleSheet, View, Alert } from 'react-native';
 
 import HomeTile from '@/components/HomeTile';
 import RecCard, { Rec } from '@/components/RecCard';
-import { ThemedText } from '@/components/ThemedText';
-
 import sampleRecs from '@/data/sample-recs.json';
 
-const TILES = [
-  { label: 'Transport', icon: 'car-outline' as const },
-  { label: 'Mart', icon: 'basket-outline' as const },
-  { label: 'Mart (food)', icon: 'fast-food-outline' as const },
-  { label: 'Express', icon: 'rocket-outline' as const },
-  { label: 'Dine Out', icon: 'restaurant-outline' as const },
-  { label: 'Chope', icon: 'calendar-outline' as const },
-  { label: 'Shopping', icon: 'cart-outline' as const },
-  { label: 'All', icon: 'apps-outline' as const },
+const TILES: { label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
+  { label: 'Transport', icon: 'car-outline' },
+  { label: 'Mart', icon: 'basket-outline' },
+  { label: 'Delivery', icon: 'fast-food-outline' },
+  { label: 'Express', icon: 'rocket-outline' },
+  { label: 'Dine Out', icon: 'restaurant-outline' },
+  { label: 'Chope', icon: 'calendar-outline' },
+  { label: 'Shopping', icon: 'cart-outline' },
+  { label: 'All', icon: 'apps-outline' },
 ];
 
 export default function HomeScreen() {
-  const handleAddCard = () => Alert.alert('Add Card');
+  const handleAddCard = () => {
+    console.log('Add Card tapped');
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.grid}>
-        {TILES.map((tile) => (
-          <HomeTile key={tile.label} label={tile.label} icon={tile.icon} />
-        ))}
+    <SafeAreaView style={styles.safe}>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <Ionicons name="scan-outline" size={24} color="#fff" />
+        <View style={styles.searchWrapper}>
+          <Ionicons name="search-outline" size={20} color="#888" />
+          <TextInput
+            placeholder="Search the Grab app"
+            placeholderTextColor="#888"
+            style={styles.searchInput}
+          />
+        </View>
+        <Ionicons name="person-circle-outline" size={28} color="#fff" />
       </View>
 
-      <View style={styles.cardsRow}>
-        {[1, 2].map((id) => (
-          <Pressable key={id} style={styles.card} onPress={handleAddCard}>
-            <Ionicons name="add" size={24} color="#0a7ea4" />
-            <ThemedText>Add a Card</ThemedText>
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* 4 × 2 GRID */}
+        <View style={styles.grid}>
+          {TILES.map((tile) => (
+            <HomeTile
+              key={tile.label}
+              icon={tile.icon}
+              label={tile.label}
+            />
+          ))}
+        </View>
+
+        {/* PAYMENT CARDS */}
+        <View style={styles.cardsRow}>
+          {[1, 2].map((id) => (
+            <Pressable
+              key={id}
+              onPress={handleAddCard}
+              style={styles.addCard}
+            >
+              <Ionicons name="add" size={20} color="#0A7EA4" />
+              <Text style={styles.addCardText}>Add a Card</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* SECTION HEADER */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Restaurants you may like</Text>
+          <Pressable>
+            <Ionicons name="chevron-forward" size={24} color="#0A7EA4" />
           </Pressable>
-        ))}
-      </View>
+        </View>
 
-      <ThemedText type="subtitle" style={styles.recTitle}>
-        Recommended
-      </ThemedText>
-      <FlatList
-        horizontal
-        data={sampleRecs as Rec[]}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <RecCard {...item} />}
-        showsHorizontalScrollIndicator={false}
-      />
-    </View>
+        {/* RECS CAROUSEL */}
+        <FlatList
+          horizontal
+          data={sampleRecs as Rec[]}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => (
+            <View style={styles.recWrapper}>
+              <RecCard {...item} />
+            </View>
+          )}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16 }}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safe: { flex: 1, backgroundColor: '#fff' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#6DD5FA',
+    ...Platform.select({
+      android: { elevation: 4 },
+      ios: { shadowColor: '#000', shadowOpacity: 0.1, shadowOffset: { width: 0, height: 2 }, shadowRadius: 4 },
+    }),
+    justifyContent: 'space-between',
+  },
+  searchWrapper: {
     flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    marginHorizontal: 12,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    borderRadius: 24,
+    height: 40,
+  },
+  searchInput: {
+    flex: 1,
+    marginLeft: 6,
+    fontSize: 16,
+    color: '#333',
+  },
+  container: {
     padding: 16,
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    marginHorizontal: -8, // to offset the 8px padding on each HomeTile wrapper
   },
   cardsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 16,
+    marginVertical: 24,
   },
-  card: {
+  addCard: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '48%',
+    backgroundColor: '#F6F9FC',
+    borderRadius: 12,
     height: 80,
+    marginHorizontal: 4,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
+    borderColor: '#E1E8F0',
   },
-  recTitle: {
-    marginBottom: 8,
+  addCardText: {
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0A7EA4',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#111',
+  },
+  recWrapper: {
+    marginRight: 16,
+    width: 200,
   },
 });
