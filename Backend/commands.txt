@@ -1,9 +1,10 @@
 - ghvenv\Scripts\activate
 - set KAFKA_BOOTSTRAP=localhost:9092
 - set REDIS_URL=redis://localhost:6379
+- set GOOGLE_API_KEY="AIzaSyABDDCwsQWHFAcwgrIaPCRcYW5OojKro-A"
 
 - docker compose ps -q redpanda
-- docker exec -it {redpanda-image-id} rpk topic list
+- docker exec -it 48cdbb9d5075912cd7244f2ff32a995ea3f8f84383a612302b03aa3121026d4a rpk topic list
 - docker exec -it {redpanda-image-id} rpk topic create inbox transcript agent.cmd agent.out.ride agent.out.food agent.out.mart agent.error agent.status agent.out.clarify
     - Topic List:
         - inbox
@@ -23,10 +24,6 @@
 - uvicorn services.context.static:app --host 0.0.0.0 --port 8001
 - uvicorn services.context.semantic:app --host 0.0.0.0 --port 8002
 - uvicorn services.adapters.main:app --host 0.0.0.0 --port 8100
+- uvicorn services.suggestions.main:app --host 0.0.0.0 --port 8300
 
 JSON.SET clarify:7c885e54-4eb8-4311-a88c-a7af40a65961 '$' '"1 Zinger Burger and 1 medium fries"'
-
-// FINE TUNE CLARIFY FLOW. MAKE STATIC DATA AND SEMANTIC DATA AS CONTEXT TO CLARIFY FLOW.
-// LLM SHOULD IDENTIFY WHEN TO USE STATIC FAVOURITES, SEMANTIC TIMESERIES DATA AND WHEN TO PROMPT BACK THE USER. 
-
-// CURRENTLY USER PROMPT BACK IS WORKING, SOME CONTEXT IS MISSING SO DATA IS GETTING OVERRIDED.

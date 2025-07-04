@@ -60,8 +60,8 @@ order_mart_tool = StructuredTool(
 TOOLS = [book_ride_tool, order_food_tool, order_mart_tool]
 
 # ── Initialize LLMs ─────────────────────────────────────────────────────────
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, convert_system_message_to_human=True)
-clarify_llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, convert_system_message_to_human=True)
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, convert_system_message_to_human=True, api_key=os.getenv("GOOGLE_API_KEY", "AIzaSyABDDCwsQWHFAcwgrIaPCRcYW5OojKro-A"))
+clarify_llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.0, convert_system_message_to_human=True, api_key=os.getenv("GOOGLE_API_KEY", "AIzaSyABDDCwsQWHFAcwgrIaPCRcYW5OojKro-A"))
 
 # ── Clarify checker prompt ──────────────────────────────────────────────────
 CLARIFY_PROMPT = """

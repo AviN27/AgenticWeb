@@ -30,7 +30,7 @@ index = pc.Index(INDEX_NAME)
 embedder = GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-exp-03-07",
     temperature=0.0,
-    api_key=GOOGLE_API_KEY
+    google_api_key=GOOGLE_API_KEY
 )
 
 # ── Models ─────────────────────────────────────────────────────────────────────

@@ -8,7 +8,7 @@ from fastapi import FastAPI, BackgroundTasks, HTTPException
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiokafka import AIOKafkaProducer
 import httpx
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 # ── Logging ────────────────────────────────────────────────────────────────
@@ -27,7 +27,8 @@ app = FastAPI(title="Suggestion Service")
 suggestion_llm = ChatGoogleGenerativeAI(
     model="gemini-2.0-flash",
     temperature=0.7,
-    convert_system_message_to_human=True
+    convert_system_message_to_human=True,
+    api_key=os.getenv("GOOGLE_API_KEY", "AIzaSyABDDCwsQWHFAcwgrIaPCRcYW5OojKro-A")
 )
 
 # ── Kafka producer ─────────────────────────────────────────────────────────
@@ -62,7 +63,10 @@ def phrase_suggestion(service: str, past_text: str) -> str:
             f"You know the user previously said: \"{past_text}\"."
             "\nGenerate exactly one sentence suggestion: \"Would you like to reorder {past_text}?\""
         )
-    response = suggestion_llm.invoke([SystemMessage(content=prompt)])
+    response = suggestion_llm.invoke([
+        SystemMessage(content="You are a suggestion assistant that proposes context-aware prompts."),
+        HumanMessage(content=prompt)
+    ])
     return response.content.strip().strip('"')
 
 
