@@ -1,111 +1,148 @@
-# GrabHackPS2
+Frontend Development 
+1. Project Setup & Boilerplate
 
-# Phase 0 — Kick‑off
+Initialize Project
 
-## 🎯 Objectives (3 h, both devs)
+Bootstrap a new Expo project in frontend/mobile using npx create-expo-app@latest --template expo-template-blank-typescript.
 
-1. **Finalise Tech Stack & Minimal Feature Set** — 1 h
-2. **Create mono‑repo `grab-agent` with pnpm workspaces** — 1 h
-3. **Agree on GitFlow & Commit policy** — 1 h
+Ensure the project uses Expo SDK 50 and TypeScript.
 
----
+Confirm app.config.js reads BACKEND_BASE_URL and SOCKET_URL.
 
-## 1. Final Tech Stack Versions
+Folder Structure
 
-| Layer       | Component      | Version            | Notes                       |
-| ----------- | -------------- | ------------------ | --------------------------- |
-| Runtime     | **Node.js**    | 20.14.0 LTS        | required for pnpm & tooling |
-| Runtime     | **pnpm**       | 9.0.6              | workspace manager           |
-| Runtime     | **Python**     | 3.12.2             | services & scripts          |
-| API svc     | **FastAPI**    | 0.111.0            | ASGI app‑interface & router |
-| Voice       | **Whisper**    | large‑v3           | local container, GGML model |
-| Message Bus | **Redpanda**   | 24.1.5             | dev Kafka replacement       |
-| DB          | **PostgreSQL** | 16.2‑alpine        | profiling state             |
-| Cache       | **Redis**      | 7.2.4              | RedisJSON profile store     |
-| Vector DB   | **Weaviate**   | 1.25.3             | hosted sandbox              |
-| Infra Code  | **Terraform**  | 1.9.0              | EKS & secrets               |
-| Infra Code  | **Helmfile**   | 0.162.0            | K8s releases                |
-| Workflow    | **Prefect**    | 2.19.6             | data connectors             |
-| LLM         | **GPT‑4o**     | 2024‑05‑13‑preview | OpenAI API                  |
-| Watch SDK   | **watchOS**    | 10.4 / Swift 5.10  | Xcode 16 beta               |
+Create src/components/, src/screens/, src/hooks/, src/utils/.
 
-### Minimal Feature Commit
+Add index.ts barrels for each folder.
 
-* *Voice & Watch*: record → transcribe → GPT → ride‑agent → push notification.
-* *Ride‑agent*: mock ETA/price, no external API.
-* *GrabPay agent*: stub with success/fail toggle.
-* *Error fallback* loop via GPT prompt.
-* *Glasses*: Unity HUD WebSocket echo only.
+2. Navigation & Layout
 
----
+Tab Bar
 
-## 2. Repository Layout (`grab-agent`)
+Bottom tabs: Home, Activity, Grab AI (FAB), Payment, Messages.
 
-```
-grab-agent/
-├── apps/
-│   └── watch/          # SwiftUI project
-├── services/
-│   ├── app_interface/  # FastAPI WebSocket ingress
-│   ├── reasoning/      # GPT wrapper + router
-│   ├── ride_agent/     # domain micro‑agent (mock)
-│   └── grabpay_agent/  # payment stub
-├── infra/              # Terraform + Helmfile
-├── ops/                # CI/CD, k6 load‑test, dashboards
-├── prompts/            # prompt templates & tool schemas
-└── docs/               # ADRs, diagrams, this README
-```
+Use @react-navigation/bottom-tabs with a custom central FAB.
 
-### pnpm Workspace snippet (root `package.json`)
+Stack Navigator
 
-```json
-{
-  "name": "grab-agent",
-  "private": true,
-  "version": "0.0.0",
-  "packageManager": "pnpm@9.0.6",
-  "workspaces": [
-    "apps/*",
-    "services/*",
-    "infra",
-    "ops",
-    "prompts"
-  ],
-  "engines": { "node": ">=20.14.0" }
-}
-```
+Wrap Home tab with a stack for navigation to AssistantSheet and StatusTracker.
 
----
+Global Theme
 
-## 3. Git Strategy
+Integrate useColorScheme() to toggle light/dark styles.
 
-* **Branches**
+3. Home Screen UI
 
-  * `main` — protected, production deploy tags only.
-  * `dev`  — integration/nightly, default branch on clone.
-  * `feat/<scope>` — short‑lived feature branches.
-* **Commit Convention** — *Conventional Commits* (`feat:`, `fix:`, `chore:` …) enforced by **commitlint** + **husky** pre‑commit hook.
-* **PR Policy**
+Grid of Verticals
 
-  * All merges to `dev` & `main` via PR, require 1 reviewer.
-  * CI (lint + unit tests) must pass.
-* **Tagging** — semantic version tags (`v1.0.0`) only on `main`.
+Implement HomeScreen with eight tiles: Transport, Mart, Mart (food), Express, Dine Out, Chope, Shopping, All.
 
----
+Tiles use SVG/PNG assets and labels.
 
-## 4. Day 0 Task Breakdown
+Payment Cards
 
-| Timebox | Assignee | Steps                                                                                          |
-| ------- | -------- | ---------------------------------------------------------------------------------------------- |
-| 10 min  | Both     | Clone empty GitHub repo `grab-agent`; set default branch `dev`.                                |
-| 20 min  | Dev 1    | Add `.gitignore` (Python, Swift, Node, Terraform) & root `package.json`; install pnpm; commit. |
-| 15 min  | Dev 2    | Create directory scaffold shown above + placeholder `README.md`; commit.                       |
-| 15 min  | Dev 1    | Add **commitlint** (`@commitlint/config-conventional`) + **husky** pre‑commit hook.            |
-| 20 min  | Dev 2    | Push **CI skeleton** `.github/workflows/ci.yml` (pnpm install → lint).                         |
-| 10 min  | Both     | Verify push → CI green → PR → merge to `dev`.                                                  |
+Two placeholders with "Add a Card".
 
-**Expected Day 0 output**
+Tap handler to open modal (stubbed).
 
-* Repo skeleton on GitHub with green CI.
-* This `README_PHASE0.md` committed in `docs/`.
-* Both dev laptops have pnpm 9.0.6 & Python 3.12 virtual‑env set up.
+Recommendations Carousel
+
+Horizontal FlatList of restaurant cards with image, name, distance, rating.
+
+Placeholder data from /frontend/mobile/data/sample-recs.json.
+
+Footer Tabs
+
+Icon-only labels using react-native-vector-icons.
+
+4. Grab AI Assistant Integration
+
+FAB Component
+
+GrabAIButton: central floating action button with Lottie sparkle.
+
+On press: navigate to AssistantSheet via StackNavigator.
+
+AssistantSheet Screen
+
+Fullscreen overlay with text input, mic button, send button.
+
+useSpeech() hook: toggle recording via Expo’s Speech-to-Text.
+
+On send: POST to ${BACKEND_BASE_URL}/v1/context/resolve, then ${BACKEND_BASE_URL}/v1/reason/plan.
+
+Streaming Suggestions
+
+useSSE() hook: connect to ${BACKEND_BASE_URL}/v1/stream/updates.
+
+Render incoming message chunks in a scrollable view.
+
+Action Execution (stub)
+
+When user confirms suggestion: POST plan to ${BACKEND_BASE_URL}/v1/execute and show SSE execution updates.
+
+5. Order Status Tracking
+
+StatusTracker Screen
+
+Accepts orderId param.
+
+useStatusSocket(orderId) hook: connect to SOCKET_URL and subscribe to events.
+
+Render timeline or status icons (e.g., pending, confirmed, on-route).
+
+Mock Data
+
+Provide a mock JSON sequence in data/mock-status.json for unit tests.
+
+6. WatchOS Companion Bridge
+
+WCSession Setup
+
+Implement WCSessionManager in mobile: listen for messages from watch.
+
+On receiving { intent, payload }, forward to Context & Reasoning APIs, return plan diff to watch.
+
+Methods
+
+sendMessageToWatch(message: any) for action updates.
+
+onMessageFromWatch(callback) to register handlers.
+
+Testing
+
+Simulate watch messages via a debug button on the Home screen.
+
+7. Styling & Theming
+
+Tailwind Classes
+
+Define utility classes for spacing, colors, typography in tailwind.config.js.
+
+Design Tokens
+
+Map primary/secondary colors, font sizes, border radii in tokens.ts.
+
+Dark Mode
+
+Use PlatformColor() or conditional classes in components.
+
+8. State Management & Hooks
+
+Auth Context (stub)
+
+Create AuthContext to manage user session (placeholder for Grab login).
+
+Speech Hook: useSpeech()
+
+Expose start, stop, and transcript state.
+
+SSE Hook: useSSE()
+
+Accept URL, return messages[] and status.
+
+WebSocket Hook: useStatusSocket()
+
+Accept orderId, return latest statusUpdate.
+9. UI
+![alt text](image.png)
