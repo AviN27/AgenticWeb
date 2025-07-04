@@ -9,24 +9,24 @@
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		52666127FC658B7DD222BC5E /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915F2AF898E213D08D8E077A /* ExpoModulesProvider.swift */; };
-		7E85AC34647103362A1B5CA8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7673C47F40A04D030AE7F3AB /* PrivacyInfo.xcprivacy */; };
+		533494452CC86CC34F0F33B7 /* libPods-grabsensenative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A85102CBE353B5DB23BF9A97 /* libPods-grabsensenative.a */; };
+		93615AEB3262055022C57B9F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3163583E06750AB6C7E8E000 /* PrivacyInfo.xcprivacy */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		D470582D26B7AA084B565422 /* libPods-grabsensenative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6AF1C4A7BBAD88E32B16354 /* libPods-grabsensenative.a */; };
+		E41440D21C288192072CE5CF /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F0F0F3E8E9C25840A2508F /* ExpoModulesProvider.swift */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		08BEDDF1D602CE7F2C8188F8 /* Pods-grabsensenative.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-grabsensenative.release.xcconfig"; path = "Target Support Files/Pods-grabsensenative/Pods-grabsensenative.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* grabsensenative.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = grabsensenative.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = grabsensenative/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = grabsensenative/Info.plist; sourceTree = "<group>"; };
-		7673C47F40A04D030AE7F3AB /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = grabsensenative/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		915F2AF898E213D08D8E077A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-grabsensenative/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		3163583E06750AB6C7E8E000 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = grabsensenative/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		7B50E5A1400A588EF027AC6D /* Pods-grabsensenative.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-grabsensenative.release.xcconfig"; path = "Target Support Files/Pods-grabsensenative/Pods-grabsensenative.release.xcconfig"; sourceTree = "<group>"; };
+		A85102CBE353B5DB23BF9A97 /* libPods-grabsensenative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-grabsensenative.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = grabsensenative/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B2F0F0F3E8E9C25840A2508F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-grabsensenative/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C77D93900E41D6FF28616AE3 /* Pods-grabsensenative.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-grabsensenative.debug.xcconfig"; path = "Target Support Files/Pods-grabsensenative/Pods-grabsensenative.debug.xcconfig"; sourceTree = "<group>"; };
-		D6AF1C4A7BBAD88E32B16354 /* libPods-grabsensenative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-grabsensenative.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BED93D002CC07F10EF1738DA /* Pods-grabsensenative.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-grabsensenative.debug.xcconfig"; path = "Target Support Files/Pods-grabsensenative/Pods-grabsensenative.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = grabsensenative/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* grabsensenative-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "grabsensenative-Bridging-Header.h"; path = "grabsensenative/grabsensenative-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,21 +37,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D470582D26B7AA084B565422 /* libPods-grabsensenative.a in Frameworks */,
+				533494452CC86CC34F0F33B7 /* libPods-grabsensenative.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0212A8B404E76D6734A0C5B5 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				5D194295B65A973AEE9E3AAF /* grabsensenative */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* grabsensenative */ = {
 			isa = PBXGroup;
 			children = (
@@ -61,7 +53,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				7673C47F40A04D030AE7F3AB /* PrivacyInfo.xcprivacy */,
+				3163583E06750AB6C7E8E000 /* PrivacyInfo.xcprivacy */,
 			);
 			name = grabsensenative;
 			sourceTree = "<group>";
@@ -70,17 +62,17 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				D6AF1C4A7BBAD88E32B16354 /* libPods-grabsensenative.a */,
+				A85102CBE353B5DB23BF9A97 /* libPods-grabsensenative.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5D194295B65A973AEE9E3AAF /* grabsensenative */ = {
+		4E4BF735CD83FDACA23814CC /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				915F2AF898E213D08D8E077A /* ExpoModulesProvider.swift */,
+				AAFC74EEF30ED3BCEE0F81AA /* grabsensenative */,
 			);
-			name = grabsensenative;
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -97,8 +89,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				E6C8F320AED9B7C1C0BAEB38 /* Pods */,
-				0212A8B404E76D6734A0C5B5 /* ExpoModulesProviders */,
+				879B6A989C98C177D082B5B5 /* Pods */,
+				4E4BF735CD83FDACA23814CC /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -113,6 +105,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		879B6A989C98C177D082B5B5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BED93D002CC07F10EF1738DA /* Pods-grabsensenative.debug.xcconfig */,
+				7B50E5A1400A588EF027AC6D /* Pods-grabsensenative.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		AAFC74EEF30ED3BCEE0F81AA /* grabsensenative */ = {
+			isa = PBXGroup;
+			children = (
+				B2F0F0F3E8E9C25840A2508F /* ExpoModulesProvider.swift */,
+			);
+			name = grabsensenative;
+			sourceTree = "<group>";
+		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -120,16 +130,6 @@
 			);
 			name = Supporting;
 			path = grabsensenative/Supporting;
-			sourceTree = "<group>";
-		};
-		E6C8F320AED9B7C1C0BAEB38 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C77D93900E41D6FF28616AE3 /* Pods-grabsensenative.debug.xcconfig */,
-				08BEDDF1D602CE7F2C8188F8 /* Pods-grabsensenative.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "grabsensenative" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				F2B09F04BD191E8BEC324E56 /* [Expo] Configure project */,
+				1F8602471F0F0DAF86329945 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				E693D08B39A1315BB3FE3A73 /* [CP] Embed Pods Frameworks */,
+				16B87F095C304DB87C47045B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				7E85AC34647103362A1B5CA8 /* PrivacyInfo.xcprivacy in Resources */,
+				93615AEB3262055022C57B9F /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +240,43 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		16B87F095C304DB87C47045B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-grabsensenative/Pods-grabsensenative-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-grabsensenative/Pods-grabsensenative-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1F8602471F0F0DAF86329945 /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-grabsensenative/expo-configure-project.sh\"\n";
+		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -280,43 +317,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-grabsensenative/Pods-grabsensenative-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E693D08B39A1315BB3FE3A73 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-grabsensenative/Pods-grabsensenative-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-grabsensenative/Pods-grabsensenative-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F2B09F04BD191E8BEC324E56 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-grabsensenative/expo-configure-project.sh\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -325,7 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				52666127FC658B7DD222BC5E /* ExpoModulesProvider.swift in Sources */,
+				E41440D21C288192072CE5CF /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,7 +334,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C77D93900E41D6FF28616AE3 /* Pods-grabsensenative.debug.xcconfig */;
+			baseConfigurationReference = BED93D002CC07F10EF1738DA /* Pods-grabsensenative.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -370,7 +370,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08BEDDF1D602CE7F2C8188F8 /* Pods-grabsensenative.release.xcconfig */;
+			baseConfigurationReference = 7B50E5A1400A588EF027AC6D /* Pods-grabsensenative.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

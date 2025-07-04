@@ -47,7 +47,6 @@ export default function TabLayout() {
         options={{
           title: 'Grab AI',
           tabBarIcon: ({ color }) => <IconSymbol size={32} name="sparkles" color={color} />,
-          tabBarButton: GrabAIButton,
         }}
       />
       <Tabs.Screen
