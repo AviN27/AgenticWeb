@@ -3,7 +3,7 @@ import json
 import time
 import asyncio
 import logging
-
+import json
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -171,15 +171,15 @@ async def reason_loop():
 
             # optional context enrich
             profile, few_shots = {}, []
-            try:
-                r1 = await httpx.AsyncClient().get(
-                    f"http://localhost:8001/v1/users/{user_id}/profile",
-                    timeout=2.0
-                )
-                if r1.status_code == 200:
-                    profile = r1.json()
-            except Exception:
-                pass
+            # try:
+            #     r1 = await httpx.AsyncClient().get(
+            #         f"http://localhost:8001/v1/users/{user_id}/profile",
+            #         timeout=2.0
+            #     )
+            #     if r1.status_code == 200:
+            #         profile = r1.json()
+            # except Exception:
+            #     pass
             try:
                 sem = {"query": text, "top_k": 2}
                 r2 = await httpx.AsyncClient().post(
@@ -189,6 +189,24 @@ async def reason_loop():
                 )
                 if r2.status_code == 200:
                     few_shots = r2.json()
+                    for shot in few_shots:
+                        svc = shot.get("service")
+                        if svc == "order_food":
+                            # auto-fill restaurant_id and items from memory if slots empty
+                            if slots.get("restaurant_id") is None:
+                                slots["restaurant_id"] = shot.get("restaurant_id")
+                            if slots.get("items") is None and shot.get("items_json"):
+                                slots["items"] = json.loads(shot["items_json"])
+                        elif svc == "order_mart":
+                            if slots.get("mart_id") is None:
+                                slots["mart_id"] = shot.get("mart_id")
+                            if slots.get("items") is None and shot.get("items_json"):
+                                slots["items"] = json.loads(shot["items_json"])
+                        elif svc == "book_ride":
+                            if slots.get("pickup") is None:
+                                slots["pickup"]  = shot.get("pickup")
+                            if slots.get("dropoff") is None:
+                                slots["dropoff"] = shot.get("dropoff")
             except Exception:
                 pass
 

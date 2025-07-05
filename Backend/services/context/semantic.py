@@ -44,6 +44,16 @@ class Interaction(BaseModel):
     text: str
     timestamp: int
     score: float
+    trace_id:    str
+    user_id:      str
+    text:         str
+    timestamp:    int
+    score:        float
+    service:      str | None = None
+    restaurant_id:str | None = None
+    mart_id:      str | None = None
+    location:     str | None = None
+    items_json:   str | None = None
 
 # ── Endpoint ───────────────────────────────────────────────────────────────────
 @app.post("/v1/users/{user_id}/retrieve", response_model=list[Interaction])
@@ -65,14 +75,18 @@ async def retrieve(user_id: str, body: RetrieveRequest):
     # 3) format results
     interactions = []
     for match in res.matches:
-        meta = match.metadata or {}
-        print(f"Match: {match.id} - Score: {match.score} - Meta: {meta}")
+        m = match.metadata or {}
         interactions.append(Interaction(
-            trace_id=match.id,
-            user_id=meta.get("user_id", ""),
-            text=meta.get("text", ""),
-            timestamp=meta.get("timestamp", 0),
-            score=match.score
+            trace_id     = match.id,
+            user_id      = m.get("user_id",""),
+            text         = m.get("text",""),
+            timestamp    = m.get("timestamp",0),
+            score        = match.score,
+            service      = m.get("service"),
+            restaurant_id= m.get("restaurant_id"),
+            mart_id      = m.get("mart_id"),
+            location     = m.get("location"),
+            items_json   = m.get("items_json")
         ))
     print(f"Retrieved {interactions}")
     return interactions
