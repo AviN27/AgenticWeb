@@ -36,7 +36,8 @@ async def handle_clarify(entry, producer):
                 "trace_id":    trace_id,
                 "user_id":     user_id,
                 "ts_epoch_ms": int(time.time() * 1000),
-                "text":        answer
+                "text":        answer,
+                "is_clarification": True,
             }
             await producer.send_and_wait(TRANSCRIPT_TOPIC, json.dumps(envelope).encode())
             log.info(f"Published clarified text to {TRANSCRIPT_TOPIC} for trace_id={trace_id}")

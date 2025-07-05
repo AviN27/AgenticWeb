@@ -26,4 +26,4 @@
 - uvicorn services.adapters.main:app --host 0.0.0.0 --port 8100
 - uvicorn services.suggestions.main:app --host 0.0.0.0 --port 8300
 
-JSON.SET clarify:7c885e54-4eb8-4311-a88c-a7af40a65961 '$' '"1 Zinger Burger and 1 medium fries"'
+JSON.SET clarify:ce277164-20e2-4172-bd3f-b7b7165d0ac0 '$' '"20/2 Hutchins road"'

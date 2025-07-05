@@ -46,7 +46,7 @@ async def fetch_top_interaction(user_id: str, query: str):
     if resp.status_code != 200:
         raise HTTPException(status_code=resp.status_code, detail="Semantic service error")
     data = resp.json()
-    return data[0]["text"] if data else None
+    return data[0] if data else None
 
 
 def phrase_suggestion(service: str, past_text: str) -> str:
@@ -88,6 +88,10 @@ async def run_suggestions():
     for service, query in specs:
         try:
             past = await fetch_top_interaction(user_id, query)
+            if past:
+                text = past["text"]
+                rest = past.get("restaurant_id") or past.get("mart_id") or ""
+                suggestion = phrase_suggestion(service, text, extra=rest)
         except Exception as e:
             log.warning(f"Skipping {service}: semantic fetch failed: {e}")
             continue
