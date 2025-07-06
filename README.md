@@ -1,111 +1,79 @@
-# GrabHackPS2
+1. High-Level Architecture
+Your backend is a microservices event-driven system using:
+* Kafka (Redpanda) for messaging between services
+* Redis for state tracking and context
+* FastAPI for HTTP APIs (adapters, app interface)
+* Python asyncio for all service logic
+Core Flow
+1. User Input (voice/text) → Frontend → WebSocket/API → Backend
+2. Backend (app_interface) receives transcript, pushes to Kafka (transcript or agent.cmd)
+3. Reasoning Service (GPT wrapper) decides which tool/agent to call (food, ride, mart, etc.)
+4. Router dispatches the command to the correct domain agent via HTTP (adapters) and Kafka
+5. Domain Agent (food_agent, ride_agent, mart_agent) mocks the action, writes result to Kafka
+6. State Tracker updates Redis and emits status updates
+7. Frontend can subscribe for updates or poll status
 
-# Phase 0 — Kick‑off
+2. Key Components
+a. app_interface/
+* mic_ws.py, text_ws.py: FastAPI WebSocket endpoints for ingesting voice/text from the frontend.
+* Pushes incoming transcripts to Kafka.
+b. reasoning/
+* main.py: The "brain"—consumes transcripts, uses GPT (LLM) to decide which tool to call (book_ride, order_food, order_mart).
+* Maintains slot-filling state in Redis.
+* If clarification is needed, triggers clarify agent.
+c. router/
+* main.py: Listens for commands on Kafka, routes them to the correct HTTP endpoint (adapters) and then to the correct Kafka output topic.
+d. adapters/
+* main.py: FastAPI app exposing REST endpoints for each domain (ride, food, mart, payment, location).
+* Each endpoint is a thin wrapper that forwards requests to the correct agent.
+e. Domain Agents (food_agent, ride_agent, mart_agent)
+* Each listens to agent.cmd Kafka topic.
+* If the command matches their tool, they mock a response (e.g., confirm ride, food order) and write to their output topic (agent.out.ride, agent.out.food, etc.).
+f. state_tracker/
+* Tracks the lifecycle of each command using Redis.
+* Listens to all relevant Kafka topics and updates state/status for each trace_id.
+g. error_agent/
+* Listens to a dead-letter queue (agent.error) and logs or forwards errors.
 
-## 🎯 Objectives (3 h, both devs)
+3. Data Flow Example
+User says: "Order me a burger"
+1. Frontend sends transcript via WebSocket to app_interface.
+2. app_interface writes to Kafka (transcript topic).
+3. reasoning consumes transcript, determines intent (order_food), and required slots (e.g., food item, address).
+4. If info is missing, triggers clarify agent; otherwise, emits command to agent.cmd.
+5. router picks up command, POSTs to /food/order on adapters, then writes result to agent.out.food.
+6. food_agent mocks order, writes confirmation to Kafka.
+7. state_tracker updates Redis state for the trace_id.
+8. Frontend can poll or subscribe for status updates.
 
-1. **Finalise Tech Stack & Minimal Feature Set** — 1 h
-2. **Create mono‑repo `grab-agent` with pnpm workspaces** — 1 h
-3. **Agree on GitFlow & Commit policy** — 1 h
+4. Observations & Suggestions
+* Mock Agents: All domain agents are currently mocks—they don’t call real APIs, just return canned responses.
+* Slot Filling: The reasoning service handles slot filling and clarification using LLM prompts and Redis state.
+* Adapters Layer: Provides a clean HTTP interface for each domain, decoupling the router from agent implementation.
+* State Tracking: Centralized in Redis, keyed by trace_id, for easy status lookup.
+* Error Handling: Errors are routed to a DLQ and logged by error_agent.
 
----
+5. How to Extend or Debug
+* To add a new domain: Add a new agent, adapter endpoint, and routing entry.
+* To debug a flow: Trace the trace_id through Kafka topics and Redis state.
+* To see live state: Use Redis CLI to inspect state:{trace_id}.
+* To see logs: Check each service’s logs for info/warnings.
 
-## 1. Final Tech Stack Versions
+6. Example Command/Topic List
+From commands.txt and code:
+* Kafka Topics: agent.cmd, agent.out.ride, agent.out.food, agent.out.mart, agent.error, agent.status, agent.out.clarify
+* Redis Keys: state:{trace_id}
 
-| Layer       | Component      | Version            | Notes                       |
-| ----------- | -------------- | ------------------ | --------------------------- |
-| Runtime     | **Node.js**    | 20.14.0 LTS        | required for pnpm & tooling |
-| Runtime     | **pnpm**       | 9.0.6              | workspace manager           |
-| Runtime     | **Python**     | 3.12.2             | services & scripts          |
-| API svc     | **FastAPI**    | 0.111.0            | ASGI app‑interface & router |
-| Voice       | **Whisper**    | large‑v3           | local container, GGML model |
-| Message Bus | **Redpanda**   | 24.1.5             | dev Kafka replacement       |
-| DB          | **PostgreSQL** | 16.2‑alpine        | profiling state             |
-| Cache       | **Redis**      | 7.2.4              | RedisJSON profile store     |
-| Vector DB   | **Weaviate**   | 1.25.3             | hosted sandbox              |
-| Infra Code  | **Terraform**  | 1.9.0              | EKS & secrets               |
-| Infra Code  | **Helmfile**   | 0.162.0            | K8s releases                |
-| Workflow    | **Prefect**    | 2.19.6             | data connectors             |
-| LLM         | **GPT‑4o**     | 2024‑05‑13‑preview | OpenAI API                  |
-| Watch SDK   | **watchOS**    | 10.4 / Swift 5.10  | Xcode 16 beta               |
-
-### Minimal Feature Commit
-
-* *Voice & Watch*: record → transcribe → GPT → ride‑agent → push notification.
-* *Ride‑agent*: mock ETA/price, no external API.
-* *GrabPay agent*: stub with success/fail toggle.
-* *Error fallback* loop via GPT prompt.
-* *Glasses*: Unity HUD WebSocket echo only.
-
----
-
-## 2. Repository Layout (`grab-agent`)
-
-```
-grab-agent/
-├── apps/
-│   └── watch/          # SwiftUI project
-├── services/
-│   ├── app_interface/  # FastAPI WebSocket ingress
-│   ├── reasoning/      # GPT wrapper + router
-│   ├── ride_agent/     # domain micro‑agent (mock)
-│   └── grabpay_agent/  # payment stub
-├── infra/              # Terraform + Helmfile
-├── ops/                # CI/CD, k6 load‑test, dashboards
-├── prompts/            # prompt templates & tool schemas
-└── docs/               # ADRs, diagrams, this README
-```
-
-### pnpm Workspace snippet (root `package.json`)
-
-```json
-{
-  "name": "grab-agent",
-  "private": true,
-  "version": "0.0.0",
-  "packageManager": "pnpm@9.0.6",
-  "workspaces": [
-    "apps/*",
-    "services/*",
-    "infra",
-    "ops",
-    "prompts"
-  ],
-  "engines": { "node": ">=20.14.0" }
-}
-```
-
----
-
-## 3. Git Strategy
-
-* **Branches**
-
-  * `main` — protected, production deploy tags only.
-  * `dev`  — integration/nightly, default branch on clone.
-  * `feat/<scope>` — short‑lived feature branches.
-* **Commit Convention** — *Conventional Commits* (`feat:`, `fix:`, `chore:` …) enforced by **commitlint** + **husky** pre‑commit hook.
-* **PR Policy**
-
-  * All merges to `dev` & `main` via PR, require 1 reviewer.
-  * CI (lint + unit tests) must pass.
-* **Tagging** — semantic version tags (`v1.0.0`) only on `main`.
-
----
-
-## 4. Day 0 Task Breakdown
-
-| Timebox | Assignee | Steps                                                                                          |
-| ------- | -------- | ---------------------------------------------------------------------------------------------- |
-| 10 min  | Both     | Clone empty GitHub repo `grab-agent`; set default branch `dev`.                                |
-| 20 min  | Dev 1    | Add `.gitignore` (Python, Swift, Node, Terraform) & root `package.json`; install pnpm; commit. |
-| 15 min  | Dev 2    | Create directory scaffold shown above + placeholder `README.md`; commit.                       |
-| 15 min  | Dev 1    | Add **commitlint** (`@commitlint/config-conventional`) + **husky** pre‑commit hook.            |
-| 20 min  | Dev 2    | Push **CI skeleton** `.github/workflows/ci.yml` (pnpm install → lint).                         |
-| 10 min  | Both     | Verify push → CI green → PR → merge to `dev`.                                                  |
-
-**Expected Day 0 output**
-
-* Repo skeleton on GitHub with green CI.
-* This `README_PHASE0.md` committed in `docs/`.
-* Both dev laptops have pnpm 9.0.6 & Python 3.12 virtual‑env set up.
+Summary Table
+Service	Input Topic/API	Output Topic/API	Purpose
+app_interface	WebSocket	Kafka (transcript)	Ingest user input
+reasoning	transcript	agent.cmd	LLM intent/slot reasoning
+router	agent.cmd	adapters HTTP, Kafka	Route to correct agent
+adapters	HTTP	Kafka	HTTP → Kafka bridge
+food_agent	agent.cmd	agent.out.food	Mock food order
+ride_agent	agent.cmd	agent.out.ride	Mock ride booking
+mart_agent	agent.cmd	agent.out.mart	Mock mart order
+state_tracker	all topics	Redis, agent.status	Track state/status
+error_agent	agent.error	log/notify	DLQ/error handling
+In summary:Your backend is a modular, event-driven, microservice system for multi-domain command handling, using Kafka for messaging, Redis for state, and FastAPI for HTTP APIs. Each agent is currently a mock, but the architecture supports real integrations. The reasoning service is the "brain" that interprets user input and orchestrates the rest.
+If you want a deep-dive into a specific service, flow, or want to see how to add a new feature, let me know!
