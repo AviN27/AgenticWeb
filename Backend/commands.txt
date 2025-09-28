@@ -1,11 +1,11 @@
-- ghvenv\Scripts\activate
+- venv\Scripts\activate
 - set KAFKA_BOOTSTRAP=localhost:9092
 - set REDIS_URL=redis://localhost:6379
 - set GOOGLE_API_KEY="AIzaSyABDDCwsQWHFAcwgrIaPCRcYW5OojKro-A"
 
 - docker compose ps -q redpanda
-- docker exec -it 48cdbb9d5075912cd7244f2ff32a995ea3f8f84383a612302b03aa3121026d4a rpk topic list
-- docker exec -it {redpanda-image-id} rpk topic create inbox transcript agent.cmd agent.out.ride agent.out.food agent.out.mart agent.error agent.status agent.out.clarify
+- docker exec -it 40e803afbd52f1612950c59cb69f298e9e87b7308301e7b7533f51a9a43b6405 rpk topic list
+- docker exec -it 40e803afbd52f1612950c59cb69f298e9e87b7308301e7b7533f51a9a43b6405 rpk topic create inbox transcript agent.cmd agent.out.ride agent.out.food agent.out.mart agent.error agent.status agent.out.clarify agent.suggest
     - Topic List:
         - inbox
         - transcript
@@ -16,6 +16,7 @@
         - agent.error
         - agent.status
         - agent.out.clarify
+        - agent.suggest
         
 - py -m venv ghvenv
 - docker compose exec redis redis-cli
@@ -25,5 +26,6 @@
 - uvicorn services.context.semantic:app --host 0.0.0.0 --port 8002
 - uvicorn services.adapters.main:app --host 0.0.0.0 --port 8100
 - uvicorn services.suggestions.main:app --host 0.0.0.0 --port 8300
+- uvicorn services.app_interface.chat_ws:app --port 8003
 
-JSON.SET clarify:ce277164-20e2-4172-bd3f-b7b7165d0ac0 '$' '"20/2 Hutchins road"'
+JSON.SET clarify:7805aa34-2f11-461a-85d0-e1302363f643 '$' '"Mart Id: Mini Baazar"'

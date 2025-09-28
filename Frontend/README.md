@@ -1,148 +1,139 @@
-Frontend Development 
-1. Project Setup & Boilerplate
+# AgenticWeb Frontend
+
+A modern React-based web interface for agentic web automation systems, providing real-time communication and interaction capabilities with AI-powered agents. Currently implemented as a chat interface for Grab's agentic automation services.
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. **Navigate to the frontend directory:**
+   ```bash
+   cd Frontend/grabsense
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open your browser:**
+   Navigate to `http://localhost:5173` (or the port shown in terminal)
+
+## 🏗️ Architecture
+
+The frontend is built as a single-page application with the following key components:
+
+### Core Components
+- **ChatWindow** - Real-time message display with agent-specific icons
+- **ChatInput** - User input interface for sending messages
+- **App** - Main application container with Material-UI theming
+
+### Key Features
+- **Real-time Communication** - WebSocket connection for live agent interactions
+- **Agent Type Recognition** - Visual indicators for different agent types (ride, food, mart, etc.)
+- **Responsive Design** - Mobile-friendly interface with dark theme
+- **Message History** - Persistent conversation display with auto-scroll
+
+## 🛠️ Tech Stack
+
+- **Framework:** React 19
+- **Build Tool:** Vite
+- **UI Library:** Material-UI (MUI)
+- **Styling:** Emotion (CSS-in-JS)
+- **Real-time:** WebSocket API
+- **Icons:** Material Icons
+
+## 📁 Project Structure
+
+```
+Frontend/grabsense/
+├── src/
+│   ├── components/
+│   │   ├── ChatWindow.jsx    # Message display component
+│   │   └── ChatInput.jsx     # Input interface
+│   ├── hooks/
+│   │   └── useWebSocket.js   # WebSocket connection hook
+│   ├── App.jsx               # Main application component
+│   ├── App.css               # Global styles
+│   ├── index.css             # Base styles
+│   └── main.jsx              # Application entry point
+├── public/                   # Static assets
+├── package.json              # Dependencies and scripts
+└── vite.config.js           # Vite configuration
+```
+
+## 🔧 Configuration
+
+The application connects to the backend via WebSocket. Key configuration:
+
+- **WebSocket URL:** `ws://localhost:8003/ws/chat`
+- **Theme:** Dark mode with custom color palette
+- **Responsive:** Mobile-first design approach
+
+## 🎨 UI Features
+
+### Message Types
+The interface recognizes and displays different types of agent messages:
+- **User Messages** - User input with person icon
+- **Ride Agent** - Car icon for transportation services
+- **Food Agent** - Restaurant icon for food delivery
+- **Mart Agent** - Shopping cart icon for grocery/shopping
+- **Clarification** - Help icon for clarification requests
+- **System** - Default agent icon for general messages
+
+### Visual Design
+- **Dark Theme** - Modern dark interface with green accent colors
+- **Material Design** - Clean, consistent UI components
+- **Responsive Layout** - Adapts to different screen sizes
+- **Auto-scroll** - Automatically scrolls to latest messages
+
+## 🚦 WebSocket Integration
+
+The frontend connects to the backend via WebSocket to receive real-time updates:
 
-Initialize Project
+```javascript
+// WebSocket connection
+const WS_URL = "ws://localhost:8003/ws/chat";
 
-Bootstrap a new Expo project in frontend/mobile using npx create-expo-app@latest --template expo-template-blank-typescript.
+// Message handling
+const { messages, connectionStatus } = useWebSocket(WS_URL);
+```
 
-Ensure the project uses Expo SDK 50 and TypeScript.
+## 🔄 Development
 
-Confirm app.config.js reads BACKEND_BASE_URL and SOCKET_URL.
+### Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-Folder Structure
+### Adding New Agent Types
+To add support for new agent types:
 
-Create src/components/, src/screens/, src/hooks/, src/utils/.
+1. Add icon import in `ChatWindow.jsx`
+2. Update `getMessageType()` function
+3. Add case in `getIcon()` function
+4. Update styling for new message type
 
-Add index.ts barrels for each folder.
+## 🤝 Contributing
 
-2. Navigation & Layout
+1. Follow React best practices and hooks patterns
+2. Maintain consistent Material-UI theming
+3. Ensure responsive design for mobile devices
+4. Test WebSocket connectivity thoroughly
 
-Tab Bar
+## 📝 Notes
 
-Bottom tabs: Home, Activity, Grab AI (FAB), Payment, Messages.
-
-Use @react-navigation/bottom-tabs with a custom central FAB.
-
-Stack Navigator
-
-Wrap Home tab with a stack for navigation to AssistantSheet and StatusTracker.
-
-Global Theme
-
-Integrate useColorScheme() to toggle light/dark styles.
-
-3. Home Screen UI
-
-Grid of Verticals
-
-Implement HomeScreen with eight tiles: Transport, Mart, Mart (food), Express, Dine Out, Chope, Shopping, All.
-
-Tiles use SVG/PNG assets and labels.
-
-Payment Cards
-
-Two placeholders with "Add a Card".
-
-Tap handler to open modal (stubbed).
-
-Recommendations Carousel
-
-Horizontal FlatList of restaurant cards with image, name, distance, rating.
-
-Placeholder data from /frontend/mobile/data/sample-recs.json.
-
-Footer Tabs
-
-Icon-only labels using react-native-vector-icons.
-
-4. Grab AI Assistant Integration
-
-FAB Component
-
-GrabAIButton: central floating action button with Lottie sparkle.
-
-On press: navigate to AssistantSheet via StackNavigator.
-
-AssistantSheet Screen
-
-Fullscreen overlay with text input, mic button, send button.
-
-useSpeech() hook: toggle recording via Expo’s Speech-to-Text.
-
-On send: POST to ${BACKEND_BASE_URL}/v1/context/resolve, then ${BACKEND_BASE_URL}/v1/reason/plan.
-
-Streaming Suggestions
-
-useSSE() hook: connect to ${BACKEND_BASE_URL}/v1/stream/updates.
-
-Render incoming message chunks in a scrollable view.
-
-Action Execution (stub)
-
-When user confirms suggestion: POST plan to ${BACKEND_BASE_URL}/v1/execute and show SSE execution updates.
-
-5. Order Status Tracking
-
-StatusTracker Screen
-
-Accepts orderId param.
-
-useStatusSocket(orderId) hook: connect to SOCKET_URL and subscribe to events.
-
-Render timeline or status icons (e.g., pending, confirmed, on-route).
-
-Mock Data
-
-Provide a mock JSON sequence in data/mock-status.json for unit tests.
-
-6. WatchOS Companion Bridge
-
-WCSession Setup
-
-Implement WCSessionManager in mobile: listen for messages from watch.
-
-On receiving { intent, payload }, forward to Context & Reasoning APIs, return plan diff to watch.
-
-Methods
-
-sendMessageToWatch(message: any) for action updates.
-
-onMessageFromWatch(callback) to register handlers.
-
-Testing
-
-Simulate watch messages via a debug button on the Home screen.
-
-7. Styling & Theming
-
-Tailwind Classes
-
-Define utility classes for spacing, colors, typography in tailwind.config.js.
-
-Design Tokens
-
-Map primary/secondary colors, font sizes, border radii in tokens.ts.
-
-Dark Mode
-
-Use PlatformColor() or conditional classes in components.
-
-8. State Management & Hooks
-
-Auth Context (stub)
-
-Create AuthContext to manage user session (placeholder for Grab login).
-
-Speech Hook: useSpeech()
-
-Expose start, stop, and transcript state.
-
-SSE Hook: useSSE()
-
-Accept URL, return messages[] and status.
-
-WebSocket Hook: useStatusSocket()
-
-Accept orderId, return latest statusUpdate.
-9. UI
-![alt text](image.png)
+- This is a flexible frontend interface for agentic web automation
+- Currently implemented as a GrabHackPS2 hackathon project
+- The interface is designed to be easily extensible for different agent types
+- Real-time communication enables seamless user-agent interactions

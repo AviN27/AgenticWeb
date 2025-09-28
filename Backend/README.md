@@ -1,111 +1,142 @@
-# GrabHackPS2
+# AgenticWeb Backend
 
-# Phase 0 — Kick‑off
+A flexible microservices-based backend system for agentic web automation, featuring AI-powered agents that can handle complex multi-step workflows across different domains. Currently implemented as a solution for Grab's ride booking, food ordering, mart shopping, and payment processing services.
 
-## 🎯 Objectives (3 h, both devs)
+## 🚀 Quick Start
 
-1. **Finalise Tech Stack & Minimal Feature Set** — 1 h
-2. **Create mono‑repo `grab-agent` with pnpm workspaces** — 1 h
-3. **Agree on GitFlow & Commit policy** — 1 h
+### Prerequisites
+- Python 3.12+
+- Virtual environment (recommended)
 
----
+### Installation
 
-## 1. Final Tech Stack Versions
+1. **Clone and navigate to backend directory:**
+   ```bash
+   cd Backend
+   ```
 
-| Layer       | Component      | Version            | Notes                       |
-| ----------- | -------------- | ------------------ | --------------------------- |
-| Runtime     | **Node.js**    | 20.14.0 LTS        | required for pnpm & tooling |
-| Runtime     | **pnpm**       | 9.0.6              | workspace manager           |
-| Runtime     | **Python**     | 3.12.2             | services & scripts          |
-| API svc     | **FastAPI**    | 0.111.0            | ASGI app‑interface & router |
-| Voice       | **Whisper**    | large‑v3           | local container, GGML model |
-| Message Bus | **Redpanda**   | 24.1.5             | dev Kafka replacement       |
-| DB          | **PostgreSQL** | 16.2‑alpine        | profiling state             |
-| Cache       | **Redis**      | 7.2.4              | RedisJSON profile store     |
-| Vector DB   | **Weaviate**   | 1.25.3             | hosted sandbox              |
-| Infra Code  | **Terraform**  | 1.9.0              | EKS & secrets               |
-| Infra Code  | **Helmfile**   | 0.162.0            | K8s releases                |
-| Workflow    | **Prefect**    | 2.19.6             | data connectors             |
-| LLM         | **GPT‑4o**     | 2024‑05‑13‑preview | OpenAI API                  |
-| Watch SDK   | **watchOS**    | 10.4 / Swift 5.10  | Xcode 16 beta               |
+2. **Create and activate virtual environment:**
+   ```bash
+   python -m venv venv
+   # Windows
+   venv\Scripts\activate
+   # macOS/Linux
+   source venv/bin/activate
+   ```
 
-### Minimal Feature Commit
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-* *Voice & Watch*: record → transcribe → GPT → ride‑agent → push notification.
-* *Ride‑agent*: mock ETA/price, no external API.
-* *GrabPay agent*: stub with success/fail toggle.
-* *Error fallback* loop via GPT prompt.
-* *Glasses*: Unity HUD WebSocket echo only.
+4. **Run the application:**
+   ```bash
+   uvicorn services.gateway.main:app --reload
+   ```
 
----
+## 🏗️ Architecture
 
-## 2. Repository Layout (`grab-agent`)
+The backend consists of multiple microservices organized as follows:
+
+### Core Services
+- **Gateway** - Main entry point and request routing
+- **Router** - Intelligent request routing to appropriate agents
+- **Reasoning** - AI-powered decision making and context processing
+
+### Domain-Specific Agents
+*Current Grab Implementation:*
+- **Ride Agent** - Handles ride booking and management
+- **Food Agent** - Manages food ordering and delivery
+- **Mart Agent** - Handles grocery/shopping orders
+- **Payment Agent** - Processes payments and transactions
+- **Error Agent** - Handles error scenarios and fallbacks
+
+*The agent architecture is designed to be easily extensible for any domain or use case.*
+
+### Interface Services
+- **App Interface** - WebSocket connections for real-time communication
+  - `chat_ws.py` - Chat interface
+  - `mic_ws.py` - Microphone/voice interface
+  - `text_ws.py` - Text input interface
+
+### Supporting Services
+- **Voice to Prompt** - Converts voice input to text prompts
+- **Context** - Manages user context and session state
+- **State Tracker** - Tracks conversation and user state
+- **Suggestions** - Provides intelligent suggestions
+- **Clarify Agent** - Handles clarification requests
+
+### Adapters
+External API integrations (Grab-specific):
+- `ride_api.py` - Ride service APIs
+- `food_api.py` - Food service APIs
+- `mart_api.py` - Mart/shopping APIs
+- `payment_api.py` - Payment processing APIs
+- `location_api.py` - Location services
+
+*Adapters can be customized for any external service or API integration.*
+
+## 🛠️ Tech Stack
+
+- **Framework:** FastAPI
+- **Language:** Python 3.12
+- **Voice Processing:** Whisper (faster-whisper)
+- **AI/LLM:** Google Generative AI, LangChain
+- **Vector Database:** Pinecone
+- **Caching:** Redis
+- **Message Queue:** Kafka (aiokafka)
+- **WebSocket:** FastAPI WebSocket support
+
+## 📁 Project Structure
 
 ```
-grab-agent/
-├── apps/
-│   └── watch/          # SwiftUI project
+Backend/
 ├── services/
-│   ├── app_interface/  # FastAPI WebSocket ingress
-│   ├── reasoning/      # GPT wrapper + router
-│   ├── ride_agent/     # domain micro‑agent (mock)
-│   └── grabpay_agent/  # payment stub
-├── infra/              # Terraform + Helmfile
-├── ops/                # CI/CD, k6 load‑test, dashboards
-├── prompts/            # prompt templates & tool schemas
-└── docs/               # ADRs, diagrams, this README
+│   ├── adapters/          # External API integrations
+│   ├── app_interface/     # WebSocket interfaces
+│   ├── clarify_agent/     # Clarification handling
+│   ├── context/           # Context management
+│   ├── error_agent/       # Error handling
+│   ├── food_agent/        # Food ordering service
+│   ├── gateway/           # Main gateway service
+│   ├── mart_agent/        # Shopping service
+│   ├── reasoning/         # AI reasoning engine
+│   ├── ride_agent/        # Ride booking service
+│   ├── router/            # Request routing
+│   ├── state_tracker/     # State management
+│   ├── suggestions/       # Suggestion engine
+│   └── voice_to_prompt/   # Voice processing
+├── tools/                 # Utility tools
+├── infra/                 # Infrastructure configs
+└── scripts/               # Helper scripts
 ```
 
-### pnpm Workspace snippet (root `package.json`)
+## 🔧 Configuration
 
-```json
-{
-  "name": "grab-agent",
-  "private": true,
-  "version": "0.0.0",
-  "packageManager": "pnpm@9.0.6",
-  "workspaces": [
-    "apps/*",
-    "services/*",
-    "infra",
-    "ops",
-    "prompts"
-  ],
-  "engines": { "node": ">=20.14.0" }
-}
-```
+The system uses environment variables for configuration. Key settings include:
+- API keys for external services
+- Database connection strings
+- Redis configuration
+- WebSocket settings
 
----
+## 🚦 API Endpoints
 
-## 3. Git Strategy
+The main gateway service exposes:
+- WebSocket endpoints for real-time communication
+- REST API endpoints for service interactions
+- Health check endpoints
 
-* **Branches**
+## 🤝 Contributing
 
-  * `main` — protected, production deploy tags only.
-  * `dev`  — integration/nightly, default branch on clone.
-  * `feat/<scope>` — short‑lived feature branches.
-* **Commit Convention** — *Conventional Commits* (`feat:`, `fix:`, `chore:` …) enforced by **commitlint** + **husky** pre‑commit hook.
-* **PR Policy**
+1. Follow the existing code structure and patterns
+2. Add appropriate error handling
+3. Include type hints for better code clarity
+4. Test your changes thoroughly
 
-  * All merges to `dev` & `main` via PR, require 1 reviewer.
-  * CI (lint + unit tests) must pass.
-* **Tagging** — semantic version tags (`v1.0.0`) only on `main`.
+## 📝 Notes
 
----
-
-## 4. Day 0 Task Breakdown
-
-| Timebox | Assignee | Steps                                                                                          |
-| ------- | -------- | ---------------------------------------------------------------------------------------------- |
-| 10 min  | Both     | Clone empty GitHub repo `grab-agent`; set default branch `dev`.                                |
-| 20 min  | Dev 1    | Add `.gitignore` (Python, Swift, Node, Terraform) & root `package.json`; install pnpm; commit. |
-| 15 min  | Dev 2    | Create directory scaffold shown above + placeholder `README.md`; commit.                       |
-| 15 min  | Dev 1    | Add **commitlint** (`@commitlint/config-conventional`) + **husky** pre‑commit hook.            |
-| 20 min  | Dev 2    | Push **CI skeleton** `.github/workflows/ci.yml` (pnpm install → lint).                         |
-| 10 min  | Both     | Verify push → CI green → PR → merge to `dev`.                                                  |
-
-**Expected Day 0 output**
-
-* Repo skeleton on GitHub with green CI.
-* This `README_PHASE0.md` committed in `docs/`.
-* Both dev laptops have pnpm 9.0.6 & Python 3.12 virtual‑env set up.
+- This is a flexible agentic web automation framework
+- Currently implemented as a GrabHackPS2 hackathon project
+- The system is designed for rapid prototyping and demonstration
+- Some services may use mock data for demonstration purposes
+- The architecture supports easy customization for different domains and use cases

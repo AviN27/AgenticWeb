@@ -1,4 +1,5 @@
 import os, json, wave, tempfile, time, uuid, asyncio, logging
+import base64
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from faster_whisper import WhisperModel
 
@@ -32,9 +33,9 @@ async def transcribe_loop():
                 envelope = json.loads(msg.value.decode())
                 log.debug(f"[v2p] Received envelope: keys={list(envelope.keys())}")
 
-                audio_hex = envelope["payload"].get("audio_b64","")
-                pcm_bytes = bytes.fromhex(audio_hex)
-                log.debug(f"[v2p] Decoded {len(pcm_bytes)} bytes")
+                audio_b64 = envelope["payload"].get("audio_b64","")
+                pcm_bytes = base64.b64decode(audio_b64)
+                log.debug(f"[v2p] Decoded {len(pcm_bytes)} bytes (base64)")
 
                 # Write a valid WAV file
                 with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:

@@ -36,7 +36,7 @@ book_ride_tool = StructuredTool(
     args_schema={
         "type": "object",
         "properties": {"pickup":{"type":"string"},"dropoff":{"type":"string"},"time":{"type":"string","format":"date-time"}},
-        "required":["pickup","dropoff"]
+        "required":["pickup","dropoff","time"]
     }
 )
 order_food_tool = StructuredTool(
@@ -45,7 +45,7 @@ order_food_tool = StructuredTool(
     args_schema={
         "type":"object",
         "properties": {"restaurant_id":{"type":"string"},"items":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"quantity":{"type":"integer","minimum":1}},"required":["name","quantity"]}},"delivery_address":{"type":"string"},"time":{"type":"string","format":"date-time"}},
-        "required":["restaurant_id","items"]
+        "required":["restaurant_id","items","time","delivery_address"]
     }
 )
 order_mart_tool = StructuredTool(
@@ -54,7 +54,7 @@ order_mart_tool = StructuredTool(
     args_schema={
         "type":"object",
         "properties": {"mart_id":{"type":"string"},"items":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"quantity":{"type":"integer","minimum":1}},"required":["name","quantity"]}},"delivery_address":{"type":"string"},"time":{"type":"string","format":"date-time"}},
-        "required":["mart_id","items"]
+        "required":["mart_id","items","time","delivery_address"]
     }
 )
 TOOLS = [book_ride_tool, order_food_tool, order_mart_tool]

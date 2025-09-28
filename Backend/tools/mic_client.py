@@ -32,7 +32,7 @@ async def main():
         "ts_epoch_ms": int(time.time()*1000),
         "payload": {
             "raw_audio": True,
-            "audio_b64": pcm_bytes.hex()
+            "audio_b64": base64.b64encode(pcm_bytes).decode()
         }
     }
     await producer.send_and_wait(TOPIC, json.dumps(envelope).encode())
